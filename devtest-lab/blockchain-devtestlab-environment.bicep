@@ -19,26 +19,25 @@ param location string = resourceGroup().location
 param hubVnetId string
 
 // VM sizing parameters
-envSize param vmSize string = 'Standard_D4s_v5'
-envImagePublisher param string = 'Canonical'
-envImageOffer param string = '0001-com-ubuntu-server-jammy'
-envImageSku param string = '22_04-lts-gen2'
-envImageVersion param string = 'latest'
+param vmSize string = 'Standard_D4s_v5'
+param imagePublisher string = 'Canonical'
+param imageOffer string = '0001-com-ubuntu-server-jammy'
+param imageSku string = '22_04-lts-gen2'
+param imageVersion string = 'latest'
 
 // Node counts
-envValidatorCount int = 4
-envRpcCount int = 2
-envBootnodeCount int = 2
+param validatorCount int = 4
+param rpcCount int = 2
+param bootnodeCount int = 2
 
 // Key Vault details
-envKeyVaultName string
-  = 'dev-blockchain-lab-kv'
+param keyVaultName string = 'dev-blockchain-lab-kv'
 
-envKeyVaultId = resourceId('Microsoft.KeyVault/vaults', envKeyVaultName)
+var keyVaultId = resourceId('Microsoft.KeyVault/vaults', keyVaultName)
 
 // Create formulas for each VM role
 // Formula: installs Besu and initializes with genesis.json
-resource validatorFormula 'Microsoft.DevTestLab/labs/formulas@2018-09-15' = [for i in range(0, envValidatorCount): {
+resource validatorFormula 'Microsoft.DevTestLab/labs/formulas@2018-09-15' = [for i in range(0, validatorCount): {
   name: '${labName}-validator-${i+1}-formula'
   properties: {
     labVirtualMachineId: '' // placeholder if reusing custom image
@@ -60,7 +59,7 @@ resource validatorFormula 'Microsoft.DevTestLab/labs/formulas@2018-09-15' = [for
   }
 }]
 
-resource rpcFormula 'Microsoft.DevTestLab/labs/formulas@2018-09-15' = [for i in range(0, envRpcCount): {
+resource rpcFormula 'Microsoft.DevTestLab/labs/formulas@2018-09-15' = [for i in range(0, rpcCount): {
   name: '${labName}-rpc-${i+1}-formula'
   properties: {
     formulaContent: {
@@ -81,7 +80,7 @@ resource rpcFormula 'Microsoft.DevTestLab/labs/formulas@2018-09-15' = [for i in 
   }
 }]
 
-resource bootnodeFormula 'Microsoft.DevTestLab/labs/formulas@2018-09-15' = [for i in range(0, envBootnodeCount): {
+resource bootnodeFormula 'Microsoft.DevTestLab/labs/formulas@2018-09-15' = [for i in range(0, bootnodeCount): {
   name: '${labName}-bootnode-${i+1}-formula'
   properties: {
     formulaContent: {
@@ -109,7 +108,7 @@ resource labEnv 'Microsoft.DevTestLab/labs/environments@2018-09-15' = {
   properties: {
     description: 'Blockchain IBFT network environment'
     labVmProfiles: [
-      for i in range(0, envValidatorCount): {
+      for i in range(0, validatorCount): {
         name: 'validator-${i+1}'
         formulaId: validatorFormula[i].id
         computeVm: {
@@ -117,12 +116,12 @@ resource labEnv 'Microsoft.DevTestLab/labs/environments@2018-09-15' = {
         }
         artifacts: []
       },
-      for i in range(0, envRpcCount): {
+      for i in range(0, rpcCount): {
         name: 'rpc-${i+1}'
         formulaId: rpcFormula[i].id
         computeVm: { size: vmSize }
       },
-      for i in range(0, envBootnodeCount): {
+      for i in range(0, bootnodeCount): {
         name: 'bootnode-${i+1}'
         formulaId: bootnodeFormula[i].id
         computeVm: { size: vmSize }
