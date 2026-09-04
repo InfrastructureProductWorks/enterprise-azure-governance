@@ -166,9 +166,10 @@ Enable end-to-end, governed blockchain development on Azure—from infrastructur
 - **hardhat-ci.yml** — Smart-contract compile/test/deploy
 
 CI checks run on pushes and pull requests to `main`. Deployment workflows use
-scoped path filters or explicit manual dispatch. In particular, **Deploy
-Management Resources** is manual-only and must be started deliberately from
-GitHub Actions. Status badges are at the top of this README.
+scoped path filters or explicit manual dispatch. Both management deployment
+workflows—**Deploy Management Resources** and **Deploy Azure Landing Zone**—are
+manual-only and must be started deliberately from GitHub Actions. Status badges
+are at the top of this README.
 
 ---
 
