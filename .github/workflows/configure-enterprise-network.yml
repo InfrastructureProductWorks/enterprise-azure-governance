@@ -35,8 +35,8 @@ env:
   CONNECTIVITY_SUBSCRIPTION_ID:  ${{ secrets.CONNECTIVITY_SUBSCRIPTION_ID }}
   MANAGEMENT_SUBSCRIPTION_ID:    ${{ secrets.MANAGEMENT_SUBSCRIPTION_ID }}
   IDENTITY_SUBSCRIPTION_ID:      ${{ secrets.IDENTITY_SUBSCRIPTION_ID }}
-  LANDINGZONE_A2_SUBSCRIPTION_ID:${{ secrets.LANDINGZONE_A2_SUBSCRIPTION_ID }}
-  LANDINGZONE_P1_SUBSCRIPTION_ID:${{ secrets.LANDINGZONE_P1_SUBSCRIPTION_ID }}
+  LANDINGZONE_A2_SUBSCRIPTION_ID: ${{ secrets.LANDINGZONE_A2_SUBSCRIPTION_ID }}
+  LANDINGZONE_P1_SUBSCRIPTION_ID: ${{ secrets.LANDINGZONE_P1_SUBSCRIPTION_ID }}
   SANDBOX_SUBSCRIPTION_ID:       ${{ secrets.SANDBOX_SUBSCRIPTION_ID }}
   ENVIRONMENT:                   ${{ github.event.inputs.environment }}
   LOCATION:                      ${{ github.event.inputs.region }}
@@ -52,7 +52,7 @@ jobs:
       hub_exists:                     ${{ steps.hub-info.outputs.hub_exists }}
       management_subscription_set:    ${{ steps.setoutputs.outputs.management_subscription_set }}
       identity_subscription_set:      ${{ steps.setoutputs.outputs.identity_subscription_set }}
-      landingzone_a2_subscription_set:${{ steps.setoutputs.outputs.landingzone_a2_subscription_set }}
+      landingzone_a2_subscription_set: ${{ steps.setoutputs.outputs.landingzone_a2_subscription_set }}
       sandbox_subscription_set:       ${{ steps.setoutputs.outputs.sandbox_subscription_set }}
     steps:
       - name: Checkout repository
