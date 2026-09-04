@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -23,39 +25,60 @@ jobs:
           az bicep install
 
       - name: Lint Bicep Files & Build ARM Templates
+        id: bicep
         run: |
-          mapfile -d '' bicep_files < <(find . -type f -name '*.bicep' -not -path './.git/*' -print0)
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+          else
+            base_sha="${{ github.event.before }}"
+          fi
+          head_sha="${{ github.sha }}"
+
+          if [[ -z "$base_sha" || "$base_sha" =~ ^0+$ ]]; then
+            mapfile -d '' bicep_files < <(git ls-files -z '*.bicep')
+          else
+            mapfile -d '' bicep_files < <(
+              git diff --name-only --diff-filter=ACMR -z "$base_sha" "$head_sha" -- '*.bicep'
+            )
+          fi
+
           if (( ${#bicep_files[@]} == 0 )); then
-            echo "No Bicep files found"
-            exit 1
+            echo "No Bicep files changed; nothing to compile."
+            echo "compiled=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
 
           for file in "${bicep_files[@]}"; do
-            relative_path="${file#./}"
-            output_path=".ci/arm/${relative_path%.bicep}.json"
+            output_path=".ci/arm/${file%.bicep}.json"
             mkdir -p "$(dirname "$output_path")"
             az bicep build --file "$file" --outfile "$output_path"
           done
+
+          echo "compiled=true" >> "$GITHUB_OUTPUT"
       
       # Bicep Linter runs automatically during build; errors will fail this step
 
       - name: Install PSRule for Azure
+        if: steps.bicep.outputs.compiled == 'true'
         shell: pwsh
         run: |
           Install-Module -Name PSRule.Rules.Azure -Force -Scope CurrentUser
 
       - name: Run PSRule for Azure
+        if: steps.bicep.outputs.compiled == 'true'
         shell: pwsh
         run: |
           Invoke-PSRule -InputPath ./.ci/arm -Module PSRule.Rules.Azure
 
       - name: Install ARM-TTK
+        if: steps.bicep.outputs.compiled == 'true'
         shell: pwsh
         run: |
           Invoke-WebRequest -Uri https://github.com/Azure/arm-ttk/archive/refs/heads/master.zip -OutFile arm-ttk.zip
           Expand-Archive arm-ttk.zip -DestinationPath .
       
       - name: Run ARM-TTK on generated ARM templates
+        if: steps.bicep.outputs.compiled == 'true'
         shell: pwsh
         run: |
           Get-ChildItem -Recurse -Filter '*.json' ./.ci/arm | ForEach-Object {
