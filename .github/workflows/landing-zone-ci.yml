@@ -18,13 +18,6 @@
 name: Deploy Azure Landing Zone
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'landing-zone/**'
-      - '.github/workflows/deploy-landing-zone.yml'
-  
   workflow_dispatch:
     inputs:
       deploymentType:
