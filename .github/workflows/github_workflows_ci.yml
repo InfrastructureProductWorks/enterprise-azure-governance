@@ -28,9 +28,6 @@ jobs:
       
       # Bicep Linter runs automatically during build; errors will fail this step
 
-      - name: Install PowerShell
-        uses: actions/setup-powershell@v2
-
       - name: Install PSRule for Azure
         shell: pwsh
         run: |
