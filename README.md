@@ -1,7 +1,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE.md)
-![CI](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/actions/workflows/landing-zone-ci.yml/badge.svg)
-![Deploy Blockchain Env](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/actions/workflows/deploy-blockchain-env.yml/badge.svg)
-![Hardhat CI](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/actions/workflows/hardhat-ci.yml/badge.svg)
+![CI](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/actions/workflows/landing-zone-ci.yml/badge.svg)
+![Deploy Blockchain Env](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/actions/workflows/deploy-blockchain-env.yml/badge.svg)
+![Hardhat CI](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/actions/workflows/hardhat-ci.yml/badge.svg)
 
 ---
 
@@ -14,8 +14,8 @@
 
 1. **Clone the repository**
     ```bash
-    git clone https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks.git
-    cd enterprise-azure-governance-template-specs-deployment-stacks
+    git clone https://github.com/InfrastructureProductWorks/enterprise-azure-governance.git
+    cd enterprise-azure-governance
     ```
 
 2. **Install prerequisites**
@@ -111,12 +111,12 @@ This repository combines:
 
 ## 📚 Documentation & Wiki
 
-- [📚 Wiki Home](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/wiki)
-- [Playbook: End-to-End Automation](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/wiki/playbook.md)
-- [Security: DevTest Lab Hardening](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/wiki/devtest-lab-security.md)
-- [Monitoring & Diagnostics](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/wiki/diagnostic-monitoring.md)
-- [Smart Contracts CI/CD](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/wiki/smart-contracts-ci-cd.md)
-- [Troubleshooting & FAQ](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/wiki/troubleshooting.md)
+- [📚 Wiki Home](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki)
+- [Playbook: End-to-End Automation](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/playbook.md)
+- [Security: DevTest Lab Hardening](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/devtest-lab-security.md)
+- [Monitoring & Diagnostics](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/diagnostic-monitoring.md)
+- [Smart Contracts CI/CD](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/smart-contracts-ci-cd.md)
+- [Troubleshooting & FAQ](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/troubleshooting.md)
 
 ---
 
@@ -165,7 +165,10 @@ Enable end-to-end, governed blockchain development on Azure—from infrastructur
 - **deploy-blockchain-env.yml** — IBFT Besu environment deployment
 - **hardhat-ci.yml** — Smart-contract compile/test/deploy
 
-Pipelines run on push/PR to `main`. Status badges are at the top of this README.
+CI checks run on pushes and pull requests to `main`. Deployment workflows use
+scoped path filters or explicit manual dispatch. In particular, **Deploy
+Management Resources** is manual-only and must be started deliberately from
+GitHub Actions. Status badges are at the top of this README.
 
 ---
 
@@ -176,7 +179,7 @@ Pipelines run on push/PR to `main`. Status badges are at the top of this README.
 - Diagnostics/logging to Log Analytics
 - Secrets managed with Key Vault and GitHub Actions secrets
 
-See [Security Guide](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/wiki/devtest-lab-security.md).
+See [Security Guide](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/devtest-lab-security.md).
 
 ---
 
@@ -184,13 +187,13 @@ See [Security Guide](https://github.com/SAABOLImpactVenture/enterprise-azure-gov
 
 We welcome contributions!  
 Please see [CONTRIBUTING.md](./CONTRIBUTING.md) and our [Code of Conduct](./CODE_OF_CONDUCT.md).  
-Open [issues](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/issues) or join [Discussions](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/discussions).
+Open [issues](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/issues) or join [Discussions](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/discussions).
 
 ---
 
 ## 🛠 Troubleshooting & FAQ
 
-- See [Troubleshooting Wiki](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/wiki/troubleshooting.md) for common issues.
+- See [Troubleshooting Wiki](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/troubleshooting.md) for common issues.
 - For support, open an issue or start a discussion.
 
 ---
@@ -199,6 +202,6 @@ Open [issues](https://github.com/SAABOLImpactVenture/enterprise-azure-governance
 
 This project is licensed under the [MIT License](LICENSE.md).
 
-For additional assistance, open an [Issue](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/issues) or [Discussion](https://github.com/SAABOLImpactVenture/enterprise-azure-governance-template-specs-deployment-stacks/discussions).
+For additional assistance, open an [Issue](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/issues) or [Discussion](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/discussions).
 
 ---
