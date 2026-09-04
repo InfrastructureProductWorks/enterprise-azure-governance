@@ -24,7 +24,18 @@ jobs:
 
       - name: Lint Bicep Files & Build ARM Templates
         run: |
-          find src -name '*.bicep' -exec az bicep build --file {} \;
+          mapfile -d '' bicep_files < <(find . -type f -name '*.bicep' -not -path './.git/*' -print0)
+          if (( ${#bicep_files[@]} == 0 )); then
+            echo "No Bicep files found"
+            exit 1
+          fi
+
+          for file in "${bicep_files[@]}"; do
+            relative_path="${file#./}"
+            output_path=".ci/arm/${relative_path%.bicep}.json"
+            mkdir -p "$(dirname "$output_path")"
+            az bicep build --file "$file" --outfile "$output_path"
+          done
       
       # Bicep Linter runs automatically during build; errors will fail this step
 
@@ -36,7 +47,7 @@ jobs:
       - name: Run PSRule for Azure
         shell: pwsh
         run: |
-          Invoke-PSRule -InputPath ./src -Module PSRule.Rules.Azure
+          Invoke-PSRule -InputPath ./.ci/arm -Module PSRule.Rules.Azure
 
       - name: Install ARM-TTK
         shell: pwsh
@@ -47,6 +58,6 @@ jobs:
       - name: Run ARM-TTK on generated ARM templates
         shell: pwsh
         run: |
-          Get-ChildItem -Recurse -Filter '*.json' ./src | ForEach-Object {
+          Get-ChildItem -Recurse -Filter '*.json' ./.ci/arm | ForEach-Object {
             pwsh ./arm-ttk-master/arm-ttk/arm-ttk.ps1 -Template $_.FullName
           }
