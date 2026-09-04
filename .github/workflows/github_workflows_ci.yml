@@ -33,15 +33,64 @@ jobs:
             base_sha="${{ github.event.before }}"
           fi
           head_sha="${{ github.sha }}"
+          mkdir -p .ci
 
           if [[ -z "$base_sha" || "$base_sha" =~ ^0+$ ]]; then
-            mapfile -d '' bicep_files < <(git ls-files -z '*.bicep')
+            git ls-files -z '*.bicep' > .ci/changed-bicep
           else
-            mapfile -d '' bicep_files < <(
-              git diff --name-only --diff-filter=ACMR -z "$base_sha" "$head_sha" -- '*.bicep'
-            )
+            git diff --name-only --no-renames --diff-filter=ACDMR -z \
+              "$base_sha" "$head_sha" -- '*.bicep' > .ci/changed-bicep
           fi
 
+          python3 <<'PY' > .ci/affected-bicep
+          import os
+          import re
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          changed = {
+              os.path.normpath(value.decode("utf-8"))
+              for value in Path(".ci/changed-bicep").read_bytes().split(b"\0")
+              if value
+          }
+          tracked = {
+              value.decode("utf-8")
+              for value in subprocess.check_output(
+                  ["git", "ls-files", "-z", "*.bicep"]
+              ).split(b"\0")
+              if value
+          }
+          local_module = re.compile(r"(?m)^\s*module\s+\w+\s+'([^']+\.bicep)'")
+          reverse_dependencies = {}
+
+          for source in tracked:
+              content = Path(source).read_text(encoding="utf-8")
+              for reference in local_module.findall(content):
+                  target = os.path.normpath(
+                      os.path.join(os.path.dirname(source), reference)
+                  )
+                  reverse_dependencies.setdefault(target, set()).add(source)
+
+          affected = set()
+          pending = list(changed)
+          visited = set(changed)
+          while pending:
+              dependency = pending.pop()
+              if dependency in tracked:
+                  affected.add(dependency)
+              for caller in reverse_dependencies.get(dependency, set()):
+                  if caller not in visited:
+                      visited.add(caller)
+                      pending.append(caller)
+
+          payload = b"\0".join(path.encode("utf-8") for path in sorted(affected))
+          if payload:
+              payload += b"\0"
+          sys.stdout.buffer.write(payload)
+          PY
+
+          mapfile -d '' bicep_files < .ci/affected-bicep
           if (( ${#bicep_files[@]} == 0 )); then
             echo "No Bicep files changed; nothing to compile."
             echo "compiled=false" >> "$GITHUB_OUTPUT"
