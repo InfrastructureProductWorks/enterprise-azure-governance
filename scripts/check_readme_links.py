@@ -33,6 +33,7 @@ FENCE_RE = re.compile(r"^\s*(```|~~~)")
 SKIP_SCHEMES = {"mailto", "tel", "javascript", "data"}
 TRANSIENT_HTTP = {403, 429}
 HARD_HTTP = {400, 404, 410, 451}
+VARIATION_SELECTORS = {"\ufe0e", "\ufe0f"}
 
 
 def strip_fenced_code(text: str) -> str:
@@ -63,6 +64,8 @@ def github_slug(value: str) -> str:
     value = clean_heading_text(value).lower()
     kept: list[str] = []
     for char in value:
+        if char in VARIATION_SELECTORS:
+            continue
         category = unicodedata.category(char)
         if char in "-_" or char.isspace() or category[0] in {"L", "N", "M"}:
             kept.append(char)
