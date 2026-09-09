@@ -1,4 +1,4 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue)](License.md)
 ![CI](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/actions/workflows/landing-zone-ci.yml/badge.svg)
 ![Deploy Blockchain Env](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/actions/workflows/deploy-blockchain-env.yml/badge.svg)
 ![Hardhat CI](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/actions/workflows/hardhat-ci.yml/badge.svg)
@@ -23,7 +23,7 @@
    - Node.js ≥ 16.x & npm
 
 3. **Configure required parameters and secrets**
-   - See [Configuration](#-configuration) and [sample .env](./smart-contracts/.env.example)
+   - See [Configuration](#-configuration)
    - Set GitHub secrets: `SANDBOX_SUBSCRIPTION_ID`, `DEVTEST_LAB_RG`, etc.
 
 4. **Deploy Landing Zone**
@@ -32,8 +32,8 @@
     az account set --subscription <your-infra-subscription>
     az deployment sub create \
       --location eastus \
-      --template-file bicep/landing-zone.bicep \
-      --parameters @bicep/parameters/landing-zone-parameters.json
+      --template-file landing-zone/landing-zone.bicep \
+      --parameters @landing-zone/parameters/landing-zone-parameters.json
     ```
 
 5. **Provision DevTest Lab**
@@ -64,13 +64,13 @@
 - [About](#-about)
 - [Quickstart](#-quickstart)
 - [Configuration](#-configuration)
-- [Documentation & Wiki](#-documentation--wiki)
+- [Documentation](#-documentation)
 - [Key Features](#-key-features)
 - [Architecture](#-architecture)
 - [Product Vision & Roadmap](#-product-vision--roadmap)
 - [CI/CD Pipelines](#-cicd-pipelines)
 - [Contributing](#-contributing)
-- [Troubleshooting & FAQ](#-troubleshooting--faq)
+- [Troubleshooting](#-troubleshooting)
 - [License & Support](#-license--support)
 
 ---
@@ -90,7 +90,7 @@ This repository combines:
 
 ### Environment Variables & Secrets
 
-- `.env` file in `smart-contracts/` (see [sample](./smart-contracts/.env.example)):
+- Configure the required values in your local shell or an untracked `.env` file under `smart-contracts/`:
   ```
   PRIVATE_KEY=your_wallet_private_key
   GOERLI_URL=https://...
@@ -104,19 +104,19 @@ This repository combines:
 
 ### Parameter Files
 
-- Bicep/ARM: see `bicep/parameters/landing-zone-parameters.json`
+- Bicep/ARM: see [`landing-zone/parameters/landing-zone-parameters.json`](landing-zone/parameters/landing-zone-parameters.json)
 - Document all required parameters; recommend creating your own copy per environment.
 
 ---
 
-## 📚 Documentation & Wiki
+## 📚 Documentation
 
-- [📚 Wiki Home](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki)
-- [Playbook: End-to-End Automation](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/playbook.md)
-- [Security: DevTest Lab Hardening](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/devtest-lab-security.md)
-- [Monitoring & Diagnostics](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/diagnostic-monitoring.md)
-- [Smart Contracts CI/CD](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/smart-contracts-ci-cd.md)
-- [Troubleshooting & FAQ](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/troubleshooting.md)
+- [Repository documentation](docs/architecture.md)
+- [DevTest Lab hardening](wiki/devtest-lab-security.md)
+- [Monitoring & Diagnostics](wiki/diagnostics-monitoring.md)
+- [Smart Contracts CI/CD](wiki/smart-contracts-ci-cd.md)
+- [Programmatic deployment](wiki/programmatic-deployment.md)
+- [Landing Zone overview](wiki/landing-zone-overview.md)
 
 ---
 
@@ -135,9 +135,9 @@ This repository combines:
 
 ## 🏗 Architecture
 
-![Landing Zone & DevTest Lab Blockchain](diagrams/LandingZoneBlockchain.png)
+![Enterprise Landing Zone Architecture](diagrams/LandingZoneArchitecture.png)
 
-> **Figure:** Enterprise-Scale Landing Zone feeding into a DevTest Lab that hosts an IBFT Hyperledger Besu network for contract integration tests.
+> **Figure:** Enterprise-Scale Landing Zone reference architecture for the Azure governance foundation.
 
 ---
 
@@ -180,28 +180,25 @@ are at the top of this README.
 - Diagnostics/logging to Log Analytics
 - Secrets managed with Key Vault and GitHub Actions secrets
 
-See [Security Guide](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/devtest-lab-security.md).
+See [DevTest Lab hardening](wiki/devtest-lab-security.md).
 
 ---
 
 ## 🧑‍💻 Contributing
 
-We welcome contributions!  
-Please see [CONTRIBUTING.md](./CONTRIBUTING.md) and our [Code of Conduct](./CODE_OF_CONDUCT.md).  
-Open [issues](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/issues) or join [Discussions](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/discussions).
+Contributions are welcome through pull requests and issues. Open [issues](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/issues) or join [Discussions](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/discussions).
 
 ---
 
-## 🛠 Troubleshooting & FAQ
+## 🛠 Troubleshooting
 
-- See [Troubleshooting Wiki](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/wiki/troubleshooting.md) for common issues.
-- For support, open an issue or start a discussion.
+Use the repository [Discussions](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/discussions) or open an [Issue](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/issues) with the failing workflow, command, and relevant logs.
 
 ---
 
 ## 📄 License & Support
 
-This project is licensed under the [MIT License](LICENSE.md).
+This project is licensed under the [MIT License](License.md).
 
 For additional assistance, open an [Issue](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/issues) or [Discussion](https://github.com/InfrastructureProductWorks/enterprise-azure-governance/discussions).
 
